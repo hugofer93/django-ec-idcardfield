@@ -1,0 +1,14 @@
+version: "3.9"
+
+services:
+  idcardfield:
+    container_name: "idcardfield"
+    build: .
+    environment:
+      DEBUG: "true"
+    volumes:
+      - ".:/opt/idcardfield"
+    ports:
+      - "8000:8000"
+    command: "poetry run mkdocs serve -f docs/mkdocs.yml -a 0.0.0.0:8000"
+    restart: "always"
