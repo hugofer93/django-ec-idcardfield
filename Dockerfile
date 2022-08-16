@@ -21,7 +21,6 @@ WORKDIR /opt/idcardfield
 
 RUN apk add --no-cache --update gcc linux-headers libc-dev \
     && apk add --no-cache --update bash git make zlib-dev libffi-dev bzip2-dev ncurses-dev readline-dev openssl-dev sqlite-dev xz-dev patch \
-    && pip install tox \
     && wget -qO- https://raw.githubusercontent.com/python-poetry/poetry/master/get-poetry.py | python - \
     && git clone https://github.com/pyenv/pyenv.git ${PYENV_ROOT} \
     && pyenv install 3.6.1 \

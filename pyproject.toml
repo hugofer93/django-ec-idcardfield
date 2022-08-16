@@ -56,11 +56,11 @@ python_paths = "tests"
 DJANGO_SETTINGS_MODULE = "tests.settings"
 django_find_project = "false"
 python_files = "*_tests.py"
-addopts = "-n auto"
+addopts = "-n auto --cov"
 
 [tool.coverage.run]
 include = ["ec_idcardfield/*"]
-omit = ["*/__init__.py", "tests/*"]
+omit = ["*/__init__.py", "tests/*", "*/apps.py"]
 
 [build-system]
 requires = ["poetry_core>=1.0.0"]
@@ -72,7 +72,6 @@ legacy_tox_ini = """
 isolated_build = True
 requires =
     tox-pyenv
-    tox-poetry
 envlist =
     py{36,37}-dj{22}-drf{39,310,311},
     py{36,37}-dj{30,31}-drf{311,312},

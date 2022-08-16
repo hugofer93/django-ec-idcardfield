@@ -10,5 +10,7 @@ services:
       - ".:/opt/idcardfield"
     ports:
       - "8000:8000"
-    command: "poetry run mkdocs serve -f docs/mkdocs.yml -a 0.0.0.0:8000"
+    command: >
+      sh -c "poetry install --no-root
+      && poetry run mkdocs serve -f docs/mkdocs.yml -a 0.0.0.0:8000"
     restart: "always"
