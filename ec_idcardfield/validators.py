@@ -1,11 +1,7 @@
 from re import compile as re_compile
 
 from django.core.exceptions import ValidationError
-from django.core.validators import (
-    MaxLengthValidator,
-    MinLengthValidator,
-    RegexValidator,
-)
+from django.core.validators import RegexValidator
 from django.utils.regex_helper import _lazy_re_compile
 from django.utils.translation import gettext_lazy as _
 
@@ -22,7 +18,6 @@ class IdcardValidator(RegexValidator):
     code = 'invalid'
 
     def __call__(self, value):
-        self.check_number_digits(value)
         super().__call__(value)
         self.common_validator(value)
 
@@ -39,15 +34,6 @@ class IdcardValidator(RegexValidator):
             self.FOREIGNERS_WITHOUT_IDCARD,
         )
         return persons_type
-
-    def check_number_digits(self, value):
-        """Check number of digits of the idcard or R.U.C.
-
-        Args:
-            value (str): Idcard number or R.U.C.
-        """
-        MinLengthValidator(self.NUMBER_DIGITS)(value)
-        MaxLengthValidator(self.NUMBER_DIGITS)(value)
 
     def common_validator(self, value):
         """Common validator for Idcards and R.U.C.
@@ -139,7 +125,6 @@ class RUCValidator(IdcardValidator):
 
 class IdcardOrRUCValidator(RUCValidator):
     def __call__(self, value):
-        self.check_number_digits(value)
         self.set_regex(value)
         RegexValidator.__call__(self, value)
         self.common_validator(value)
@@ -155,21 +140,6 @@ class IdcardOrRUCValidator(RUCValidator):
         else:
             regex = RUCValidator.regex
         self.regex = _lazy_re_compile(regex, self.flags)
-
-    def check_number_digits(self, value):
-        """Check number of digits of the Idcard or R.U.C.
-
-        Args:
-            value (str): Idcard number or R.U.C.
-
-        Raises:
-            ValidationError: Number of digits is incorrect.
-        """
-        idcard_length = IdcardValidator.NUMBER_DIGITS
-        ruc_length = RUCValidator.NUMBER_DIGITS
-        if idcard_length < len(value) < ruc_length:
-            raise ValidationError(self.message, code=self.code,
-                                  params={'value': value})
 
 
 validate_idcard = IdcardValidator()
